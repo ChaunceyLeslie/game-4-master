@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en_us">
+
+  <head>
+    <meta charset="utf-8">
+    <title>CrystalsCollector Game</title>
+
+    <link href="game-4" ref="stylesheet" type="assets/css/resets.css" />
+
+    <link href="game-4" ref="stylesheet" type="assets/css/style.css" />
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+
+  </head>
+
+  <body>
+    <style type="text/css">
+      body {
+        background: black;
+      }
+    </style>
+
+    <div class="container">
+      <div class="jumbotron" style="background-color:#00F3FF">
+        <h1>Crystals Collector</h1>
+        <div class="text-center">
+          <button class="btn btn-warning btn-xs theme-button"><span class="glyphicon glyphicon-music"></span> Play Theme!</button>
+          <button class="btn btn-default btn-xs pause-button"><span class="glyphicon glyphicon-pause"></span> Pause Song</button>
+        </div>
+      </div>
+      <div class="instructions">
+        <h3>Here's how you play the game</h3>
+        </br>
+        <ol>
+          <li>You will be given a random number at the start of the game.<span>"Number To Get"</span></li>
+          <li>There are four crystals below.</li>
+          <ul>
+
+          </ul>
+          <li>By clicking on a crystal, you will add a specific amount of points to your total score.</li>
+          <li>You win the game by matching your total score to the random number.</li>
+          <li>You lose the game if your total score goes above the random number.</li>
+          <li>The value of each crystal is hidden from you until you click on it.</li>
+          <li>Each time when the game starts, the game will change the values of each crystal.</li>
+        </ol>
+      </div>
+      <div class="numberToMatch">
+        <h2>Number To Get:
+            <span id="randomNumber"></span>
+       </h2>
+      </div>
+      <div class="winsAndLosses">
+        <h2>Wins:
+      <span id= "numberWins"></span>
+      </br>
+      Losses: 
+      <span id= "numberLosses"></span>
+    </h2>
+      </div>
+      <div class="gems" id="gemsbuttons">
+
+        <img src="https://orig08.deviantart.net/c79f/f/2011/054/0/d/bejeweled_animated_gem_1_by_bedgear-d3a8yp4.gif" class="gemsButton" alt="" id="blue" data-value="">
+
+        <img src="http://orig03.deviantart.net/f451/f/2011/054/a/4/bejeweled_animated_gem_2_by_bedgear-d3a8yxl.gif" class="gemsButton" alt="" id="green" data-value="">
+
+
+        <img src="https://orig09.deviantart.net/34cd/f/2011/054/3/6/bejeweled_animated_gem_6_by_bedgear-d3a8z9m.gif" class="gemsButton" alt="" id="red" data-value="">
+
+
+
+        <img src="https://orig07.deviantart.net/e34a/f/2011/054/0/8/bejeweled_animated_gem_5_by_bedgear-d3a8z75.gif" class="gemsButton" alt="" id="yellow" data-value="">
+
+
+        <div class="userTotal">
+          <h2>Your total score is:
+            <span id="finalTotal"></span>
+          </h2>
+        </div>
+
+        <script type="text/javascript">
+          $(document).ready(function() {
+
+            var blue = 0;
+            var green = 0;
+            var red = 0;
+            var yellow = 0;
+            var randNumber = 0;
+            var finalTotal = 0;
+            var numberWins = 0;
+            var numberLosses = 0;
+
+            // generate music while playing my game
+            var audioElement = document.createElement("audio");
+            audioElement.setAttribute("src", "assets/04 04 - I Kno (Peod By The Renegades).mp3");
+            $("theme-button").on("click", function() {
+              audioElement.play();
+            });
+            $(".pause-button").on("click", function() {
+              audioElement.pause();
+            });
+
+            startGame(blue, green, red, yellow);
+
+            function newRound() {
+
+              finalTotal = 0;
+              console.log(finalTotal);
+
+              blue = $('#blue').val(Math.floor(Math.random() * 10) + 1);
+              green = $('#green').val(Math.floor(Math.random() * 10) + 1);
+              red = $('#red').val(Math.floor(Math.random() * 10) + 1);
+              yellow = $('#yellow').val(Math.floor(Math.random() * 10) + 1);
+              
+              randNumber = Math.floor(Math.random() * 120) + 18;
+
+              // creates random numbers between 1-100
+              document.getElementById("randomNumber").innerHTML = randNumber;
+              // Prints random numbers on the DOM.
+              document.getElementById("finalTotal").innerHTML = finalTotal;
+              document.getElementById("numberWins").innerHTML = numberWins;
+              document.getElementById("numberLosses").innerHTML = numberLosses;
+
+            };
+
+            //var startGame = function(blue, green, red, yellow) {
+            function startGame(blue, green, red, yellow) {
+              newRound();
+              $('.gemsButton').on('click', function() {
+                // create an array 
+                var gems = ["blue", "green", "red", "yellow"];
+                // for loop gems numbers to make sure they don't repeat
+                console.log('this.value', this.value);
+                console.log('before finalTotal ', finalTotal);
+                //finalTotal = finalTotal + Number(this.value);
+                finalTotal = finalTotal + parseInt(this.value);
+                console.log('after finalTotal ', finalTotal);
+                document.getElementById("finalTotal").innerHTML = parseInt(finalTotal);
+                // if finalTotal equal randNumber
+                //    then reset game and increment wins
+                // else if finalTotal greater than randNumber
+                //    then reset game and increment losses
+
+                if (finalTotal === randNumber) {
+                  numberWins++;
+                  newRound();
+                } else if (finalTotal > randNumber) {
+                  numberLosses++;
+                  newRound();
+                }
+                // if(finalTotal = NumberToGet(win)
+                // if finaltotal is greater then number then that is a loss.
+                // reset the button values to new random values and final score go to zero
+                //add win and loss to html 
+
+                // check array 
+                // genarate the number 
+              });
+
+            };
+
+          });
+
+        </script>
+
+  </body>
+</html>
